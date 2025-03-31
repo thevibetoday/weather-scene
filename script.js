@@ -123,12 +123,61 @@ function createStorm(c) {
 function createQuaint(c) {
   const x = c.getContext('2d');
   const birds = [];
-  for (let i = 0; i < 8; i++) birds.push({ x: Math.random() * c.width, y: Math.random() * c.height / 2, dx: 1 + Math.random() * 1.5 });
+  for (let i = 0; i < 6; i++) birds.push({
+    x: Math.random() * c.width,
+    y: Math.random() * c.height * 0.4,
+    dx: 1 + Math.random() * 1.2,
+    dy: Math.random() * 0.3 - 0.15,
+    angle: 0,
+    size: 20 + Math.random() * 10,
+    flapSpeed: 0.1 + Math.random() * 0.1
+  });
+
   const breeze = [];
-  for (let i = 0; i < 40; i++) breeze.push({ x: Math.random() * c.width, y: Math.random() * c.height, r: Math.random() * 2 + 1, dx: Math.random() * 0.3 + 0.1 });
+  for (let i = 0; i < 80; i++) breeze.push({
+    x: Math.random() * c.width,
+    y: Math.random() * c.height,
+    r: Math.random() * 1.5 + 0.5,
+    dx: Math.random() * 0.3 + 0.1
+  });
+
+  function drawBird(b) {
+    const wingFlap = Math.sin(b.angle) * 0.5;
+    const cx = b.x, cy = b.y, s = b.size;
+    x.save();
+    x.translate(cx, cy);
+
+    x.beginPath();
+    x.ellipse(0, 0, s * 0.6, s * 0.25, 0, 0, Math.PI * 2);
+    x.fillStyle = '#222';
+    x.fill();
+
+    x.beginPath();
+    x.ellipse(s * 0.6, 0, s * 0.2, s * 0.2, 0, 0, Math.PI * 2);
+    x.fillStyle = '#222';
+    x.fill();
+
+    x.beginPath();
+    x.moveTo(0, 0);
+    x.quadraticCurveTo(-s * 1.2, -s * 0.5 * wingFlap, -s * 2, 0);
+    x.quadraticCurveTo(-s * 1.2, s * 0.5 * wingFlap, 0, 0);
+    x.fillStyle = '#111';
+    x.fill();
+
+    x.beginPath();
+    x.moveTo(0, 0);
+    x.quadraticCurveTo(s * 1.2, -s * 0.5 * wingFlap, s * 2, 0);
+    x.quadraticCurveTo(s * 1.2, s * 0.5 * wingFlap, 0, 0);
+    x.fillStyle = '#111';
+    x.fill();
+
+    x.restore();
+  }
+
   function draw() {
     x.clearRect(0, 0, c.width, c.height);
-    x.fillStyle = 'rgba(200, 200, 200, 0.2)';
+
+    x.fillStyle = 'rgba(255,255,255,0.08)';
     breeze.forEach(p => {
       x.beginPath();
       x.arc(p.x, p.y, p.r, 0, Math.PI * 2);
@@ -136,21 +185,21 @@ function createQuaint(c) {
       p.x += p.dx;
       if (p.x > c.width) p.x = -5;
     });
-    x.fillStyle = 'rgba(0, 0, 0, 0.8)';
+
     birds.forEach(b => {
-      x.beginPath();
-      x.moveTo(b.x, b.y);
-      x.lineTo(b.x - 10, b.y - 5);
-      x.lineTo(b.x - 10, b.y + 5);
-      x.closePath();
-      x.fill();
+      drawBird(b);
       b.x += b.dx;
-      if (b.x > c.width + 20) {
-        b.x = -20;
-        b.y = Math.random() * c.height / 2;
+      b.y += b.dy;
+      b.angle += b.flapSpeed;
+      if (b.x > c.width + 100) {
+        b.x = -100;
+        b.y = Math.random() * c.height * 0.4;
+        b.angle = 0;
       }
     });
+
     requestAnimationFrame(draw);
   }
+
   draw();
 }
