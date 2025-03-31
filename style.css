@@ -46,6 +46,16 @@ body, html { height: 100%; width: 100%; overflow: hidden; }
 
 @keyframes lightning {
   0%, 90% { opacity: 0; }
-  91%, 93% { opacity: 1; }
+  91% { opacity: 0.3; }
+  92% { opacity: 1; }
+  93% { opacity: 0.3; }
   94%, 100% { opacity: 0; }
 }
+
+.panel {
+  flex: 1;
+  position: relative;
+  background: url('scene.jpg') center/cover no-repeat;
+}
+
+
