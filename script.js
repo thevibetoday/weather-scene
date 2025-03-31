@@ -1,3 +1,42 @@
+function drawScene(canvas) {
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width;
+  const h = canvas.height;
+
+  const gradient = ctx.createLinearGradient(0, 0, 0, h);
+  gradient.addColorStop(0, '#87CEEB');
+  gradient.addColorStop(0.5, '#ffffff');
+  gradient.addColorStop(1, '#4a7c59');
+
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, w, h);
+
+  ctx.beginPath();
+  ctx.moveTo(0, h * 0.6);
+  for (let i = 0; i <= w; i += 1) {
+    const scale = 80 * Math.sin(i * 0.005) + 150 * Math.sin(i * 0.002);
+    ctx.lineTo(i, h * 0.6 - scale);
+  }
+  ctx.lineTo(w, h);
+  ctx.lineTo(0, h);
+  ctx.closePath();
+  ctx.fillStyle = '#3e3e3e';
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.ellipse(w * 0.75, h * 0.85, w * 0.3, h * 0.1, 0, 0, Math.PI * 2);
+  ctx.fillStyle = '#88c5c5';
+  ctx.fill();
+
+  const reflect = ctx.createLinearGradient(0, h * 0.75, 0, h);
+  reflect.addColorStop(0, 'rgba(255,255,255,0.1)');
+  reflect.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = reflect;
+  ctx.fillRect(0, h * 0.75, w, h * 0.25);
+}
+
+
+
 window.onload = () => {
   const panels = document.querySelectorAll('.panel');
   panels.forEach((panel) => {
@@ -9,6 +48,7 @@ window.onload = () => {
     canvas.style.left = '0';
     canvas.style.zIndex = '1';
     panel.appendChild(canvas);
+    drawScene(canvas);
     const type = panel.classList[1];
     if (type === 'rainy') createRain(canvas);
     if (type === 'sunny') createSun(canvas);
